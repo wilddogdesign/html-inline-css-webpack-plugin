@@ -1,6 +1,6 @@
-import { Compiler } from 'webpack';
+import { Compiler } from "webpack";
 interface ReplaceConfig {
-    position?: 'before' | 'after';
+    position?: "before" | "after";
     removeTarget?: boolean;
     target: string;
     leaveCssFile?: boolean;

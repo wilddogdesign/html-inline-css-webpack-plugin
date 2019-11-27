@@ -10,7 +10,7 @@
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var DEFAULT_REPLACE_CONFIG = {
-        target: '</head>'
+        target: "</head>"
     };
     var Plugin = /** @class */ (function () {
         function Plugin(config) {
@@ -22,21 +22,24 @@
         Plugin.addStyle = function (html, style, replaceConfig) {
             var styleString = "<style type=\"text/css\">" + style + "</style>";
             var replaceValues = [styleString, replaceConfig.target];
-            if (replaceConfig.position === 'after') {
+            if (replaceConfig.position === "after") {
                 replaceValues.reverse();
             }
-            return html.replace(replaceConfig.target, replaceValues.join(''));
+            html = String(html);
+            return html.replace(replaceConfig.target, replaceValues.join(""));
         };
         Plugin.removeLinkTag = function (html, cssFileName) {
-            return html.replace(new RegExp("<link[^>]+href=['\"]" + cssFileName + "['\"][^>]+(>|/>|></link>)"), '');
+            html = String(html);
+            return html.replace(new RegExp("<link[^>]+href=['\"]" + cssFileName + "['\"][^>]+(>|/>|></link>)"), "");
         };
         Plugin.cleanUp = function (html, replaceConfig) {
+            html = String(html);
             return replaceConfig.removeTarget
-                ? html.replace(replaceConfig.target, '')
+                ? html.replace(replaceConfig.target, "")
                 : html;
         };
         Plugin.prototype.filter = function (fileName) {
-            if (typeof this.config.filter === 'function') {
+            if (typeof this.config.filter === "function") {
                 return this.config.filter(fileName);
             }
             else {
@@ -46,8 +49,8 @@
         Plugin.prototype.prepare = function (_a) {
             var _this = this;
             var assets = _a.assets;
-            var isCSS = is('css');
-            var isHTML = is('html');
+            var isCSS = is("css");
+            var isHTML = is("html");
             var _b = this.config.replace, replaceConfig = _b === void 0 ? DEFAULT_REPLACE_CONFIG : _b;
             Object.keys(assets).forEach(function (fileName) {
                 if (isCSS(fileName)) {
@@ -68,7 +71,7 @@
             var _this = this;
             var assets = _a.assets;
             var output = _b.output;
-            var publicPath = (output && output.publicPath) || '';
+            var publicPath = (output && output.publicPath) || "";
             var _c = this.config.replace, replaceConfig = _c === void 0 ? DEFAULT_REPLACE_CONFIG : _c;
             Object.keys(this.html).forEach(function (htmlFileName) {
                 var html = _this.html[htmlFileName];
@@ -78,14 +81,18 @@
                 });
                 html = Plugin.cleanUp(html, replaceConfig);
                 assets[htmlFileName] = {
-                    source: function () { return html; },
-                    size: function () { return html.length; },
+                    source: function () {
+                        return html;
+                    },
+                    size: function () {
+                        return html.length;
+                    }
                 };
             });
         };
         Plugin.prototype.apply = function (compiler) {
             var _this = this;
-            compiler.hooks.emit.tapAsync('html-inline-css-webpack-plugin', function (compilation, callback) {
+            compiler.hooks.emit.tapAsync("html-inline-css-webpack-plugin", function (compilation, callback) {
                 _this.prepare(compilation);
                 _this.process(compilation, compiler.options);
                 callback();
